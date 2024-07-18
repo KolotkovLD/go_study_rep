@@ -34,19 +34,80 @@ func max_val(arr []int) int{
     return max_item
 }
 
-1 
-3
-4 
-5
-6 
-8
+//1 
+//3/
+//4 
+//5
+//6 
+//8
 //поиск минимального, с дальнейшим поиском в усеченном массиве
 //терминал линукса
 //git
 
 
-3 4 5 6 8 9
+//3 4 5 6 8 9
 //перестановка парой (идем слева направо, сравниваем, отскакиваем, если корректно идем вправо)
+
+//{3, 6, 2, 7, 78, 0, 62, 12, 9}
+//2, 0   ->  0, 2
+//6,7, 78, 62, 12, 9   ->   6, 7, 9, 12, 62, 78
+
+//0, 2, 3  , 6, 7, 9 ,12, 62, 78
+
+
+func part_sort(arr []int) []int{
+    if len(arr) == 0{
+	return []int{}
+    }
+    
+    var new_arr_more []int
+    var new_arr_less []int
+
+    for i:=1; i<len(arr); i++{
+	if arr[i]>arr[0]{
+	    new_arr_more = append(new_arr_more, arr[i])
+	}else{
+	    new_arr_less = append(new_arr_less, arr[i])
+	}
+    }
+
+    new_arr_more = part_sort(new_arr_more)
+    new_arr_less = part_sort(new_arr_less)
+    new_arr_less = append(new_arr_less, arr[0])
+    new_arr_less = append(new_arr_less, new_arr_more...)
+    return new_arr_less 
+}
+ 
+/*
+6, 4, 2, 7, 8, 5
+6, 4, 2    7, 8, 5
+, ,     , 7, 8
+
+2, 4, 5, 6, 7, 8
+
+
+*/
+
+func middle_sort(){}
+
+
+
+func compare_sort(arr1 []int, arr2 []int) []int {
+    var arr_rt := []int{}
+    
+    for len(arr1)>0 || len(arr2)>0{
+        if arr1[0] < arr2[0]{
+    	    arr_rt = append(arr_rt, arr1[0])
+	    arr1 = arr1[1:]
+	}else{
+	    arr_rt = append(arr_rt,  arr2[0])
+	    arr2 = arr2[1:]
+	}
+	
+    }
+    return arr_rt
+}
+
 
 func main(){
     fmt.Println(esc_sort([]int{2,4,6,3}))
@@ -54,4 +115,6 @@ func main(){
 
     fmt.Println(bubble_sort([]int{1,3,2,4, 66, 76, 5}))
     fmt.Println(max_val([]int{1, 4, 66, 7}))
+    fmt.Println(part_sort([]int{0, 2, 9, 6, 7 ,78, 62}))
+    fmt.Println
 }
