@@ -102,7 +102,30 @@ func part_sort(arr []int) []int {
 
 */
 
-func middle_sort() {}
+func quick_sort(arr []int) []int {
+	if len(arr) <= 1 {
+		return arr
+	} else {
+		pivot := arr[len(arr)/2]
+		lesser := []int{}
+		for i := 0; len(arr) > i; i++ {
+			if pivot > arr[i] {
+				lesser = append(lesser, arr[i])
+			}
+		}
+		bigger := []int{}
+		for i := 0; len(arr) > i; i++ {
+			if pivot < arr[i] {
+				bigger = append(bigger, arr[i])
+			}
+		}
+		rt_arr := []int{}
+		rt_arr = append(rt_arr, quick_sort(lesser)...)
+		rt_arr = append(rt_arr, pivot)
+		rt_arr = append(rt_arr, quick_sort(bigger)...)
+		return rt_arr
+	}
+}
 
 func compare_sort(arr1 []int, arr2 []int) []int {
 	var arr_rt = []int{}
@@ -129,4 +152,5 @@ func main() {
 	fmt.Println(part_sort([]int{0, 2, 9, 6, 7, 78, 62}))
 	fmt.Println()
 	fmt.Println(pare_sort([]int{3, 2, 5, 6, 0, 9}))
+	fmt.Println(quick_sort([]int{3, 2, 5, 6, 0, 9}))
 }
