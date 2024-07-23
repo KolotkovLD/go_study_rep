@@ -94,11 +94,10 @@ func part_sort(arr []int) []int {
 
 /*
 6, 4, 2, 7, 8, 5
-6, 4, 2    7, 8, 5
-, ,     , 7, 8
+6, 4, 2, |  7, 8, 5
+   |   7, 8
 
 2, 4, 5, 6, 7, 8
-
 
 */
 
@@ -127,10 +126,22 @@ func quick_sort(arr []int) []int {
 	}
 }
 
+
+func merge_sort(arr []int) []int{
+    if len(arr) == 1 || len(arr) == 0{
+	return arr
+    }
+    arr1 := merge_sort(arr[:len(arr)/2])
+    arr2 := merge_sort(arr[len(arr)/2:])
+    return compare_sort(arr1, arr2)
+}
+
+
 func compare_sort(arr1 []int, arr2 []int) []int {
 	var arr_rt = []int{}
 
-	for len(arr1) > 0 || len(arr2) > 0 {
+	for len(arr1) > 0 && len(arr2) > 0 {
+		//fmt.Println(arr1[0], arr2[0])
 		if arr1[0] < arr2[0] {
 			arr_rt = append(arr_rt, arr1[0])
 			arr1 = arr1[1:]
@@ -140,8 +151,61 @@ func compare_sort(arr1 []int, arr2 []int) []int {
 		}
 
 	}
+	if len(arr1) == 0{
+	    arr_rt = append(arr_rt, arr2...)
+	}
+	if len(arr2) == 0{
+	    arr_rt = append(arr_rt, arr1...)
+	}
 	return arr_rt
 }
+
+
+/*число четное если предыдущее нечетное
+число нечетное если предыдущее четное*/
+
+func even_num(num int) bool{
+    if num == 0{
+	return true
+    }
+    if odd_num(num-1){
+	return true
+    }
+    return false
+}
+
+func odd_num(num int) bool{
+    if num == 0{
+	return false
+    }
+    if even_num(num-1){
+	return true
+    }
+    return false
+}
+
+
+/*найти рекурсивно максимальный элемент массива*/
+
+func requr_max(arr []int) int{
+
+    if len(arr) == 1{
+	return arr[0]
+    }
+    req_val := requr_max(arr[1:])
+    if arr[0] > req_val{
+	return arr[0]
+    }else{
+	return req_val
+    }
+}
+
+
+/*
+1) рекурсивная функция, которая переворачивает строку
+2) рекурсивное исполнение функции которая соединяет массивы
+3) --подготовка к "крестикам ноликам"
+*/
 
 func main() {
 	fmt.Println(esc_sort([]int{2, 4, 6, 3}))
@@ -153,4 +217,11 @@ func main() {
 	fmt.Println()
 	fmt.Println(pare_sort([]int{3, 2, 5, 6, 0, 9}))
 	fmt.Println(quick_sort([]int{3, 2, 5, 6, 0, 9}))
+
+	fmt.Println(compare_sort([]int{2, 5, 88, 100}, []int{7, 44, 101}))
+	fmt.Println(merge_sort([]int{88, 5, 2, 100, 7, 101, 44}))
+	fmt.Println(even_num(101))
+	fmt.Println(odd_num(101))
+	fmt.Println()
+	fmt.Println(requr_max([]int{}))
 }
