@@ -126,16 +126,14 @@ func quick_sort(arr []int) []int {
 	}
 }
 
-
-func merge_sort(arr []int) []int{
-    if len(arr) == 1 || len(arr) == 0{
-	return arr
-    }
-    arr1 := merge_sort(arr[:len(arr)/2])
-    arr2 := merge_sort(arr[len(arr)/2:])
-    return compare_sort(arr1, arr2)
+func merge_sort(arr []int) []int {
+	if len(arr) == 1 || len(arr) == 0 {
+		return arr
+	}
+	arr1 := merge_sort(arr[:len(arr)/2])
+	arr2 := merge_sort(arr[len(arr)/2:])
+	return compare_sort(arr1, arr2)
 }
-
 
 func compare_sort(arr1 []int, arr2 []int) []int {
 	var arr_rt = []int{}
@@ -151,55 +149,77 @@ func compare_sort(arr1 []int, arr2 []int) []int {
 		}
 
 	}
-	if len(arr1) == 0{
-	    arr_rt = append(arr_rt, arr2...)
+	if len(arr1) == 0 {
+		arr_rt = append(arr_rt, arr2...)
 	}
-	if len(arr2) == 0{
-	    arr_rt = append(arr_rt, arr1...)
+	if len(arr2) == 0 {
+		arr_rt = append(arr_rt, arr1...)
 	}
 	return arr_rt
 }
 
-
 /*число четное если предыдущее нечетное
 число нечетное если предыдущее четное*/
 
-func even_num(num int) bool{
-    if num == 0{
-	return true
-    }
-    if odd_num(num-1){
-	return true
-    }
-    return false
-}
-
-func odd_num(num int) bool{
-    if num == 0{
+func even_num(num int) bool {
+	if num == 0 {
+		return true
+	}
+	if odd_num(num - 1) {
+		return true
+	}
 	return false
-    }
-    if even_num(num-1){
-	return true
-    }
-    return false
 }
 
+func odd_num(num int) bool {
+	if num == 0 {
+		return false
+	}
+	if even_num(num - 1) {
+		return true
+	}
+	return false
+}
 
 /*найти рекурсивно максимальный элемент массива*/
 
-func requr_max(arr []int) int{
+func requr_max(arr []int) int {
 
-    if len(arr) == 1{
-	return arr[0]
-    }
-    req_val := requr_max(arr[1:])
-    if arr[0] > req_val{
-	return arr[0]
-    }else{
-	return req_val
-    }
+	if len(arr) == 1 {
+		return arr[0]
+	}
+	req_val := requr_max(arr[1:])
+	if arr[0] > req_val {
+		return arr[0]
+	} else {
+		return req_val
+	}
 }
 
+/*func reverse_string(str string) string {
+	if len(str) == 1 {
+		return string(str)
+	} else {
+		firstChar := str[0]
+		restOfChar := str[1:]
+		reversedRest := reverse_string(restOfChar)
+		return reversedRest + string(firstChar)
+	}
+}*/
+
+/*    rivet P
+ivet	r	P
+vet		i	r	P
+et		v	irP
+t
+*/
+
+func reqursion_append(arr1 []int, arr2 []int) []int {
+	if len(arr2) == 1 {
+		return arr2
+	}
+	return reqursion_append(append(arr1, arr2[0]), arr2[1:])
+}
 
 /*
 1) рекурсивная функция, которая переворачивает строку
@@ -224,4 +244,6 @@ func main() {
 	fmt.Println(odd_num(101))
 	fmt.Println()
 	fmt.Println(requr_max([]int{}))
+	//fmt.Println(reverse_string("Privet"))
+	fmt.Println(reqursion_append([]int{1, 2, 3}, []int{5, 6, 7}))
 }
