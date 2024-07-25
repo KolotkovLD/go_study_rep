@@ -196,16 +196,19 @@ func requr_max(arr []int) int {
 	}
 }
 
-/*func reverse_string(str string) string {
-	if len(str) == 1 {
-		return string(str)
+func reverse_string(str string) string {
+	if len(str) == 0{
+	    return ""
+	//}
+	//if len(str) == 1 {
+	//	return string(str)
 	} else {
 		firstChar := str[0]
 		restOfChar := str[1:]
 		reversedRest := reverse_string(restOfChar)
 		return reversedRest + string(firstChar)
 	}
-}*/
+}
 
 /*    rivet P
 ivet	r	P
@@ -216,7 +219,7 @@ t
 
 func reqursion_append(arr1 []int, arr2 []int) []int {
 	if len(arr2) == 1 {
-		return arr2
+		return append( arr1, arr2[0])
 	}
 	return reqursion_append(append(arr1, arr2[0]), arr2[1:])
 }
@@ -228,7 +231,7 @@ func reqursion_append(arr1 []int, arr2 []int) []int {
 */
 
 func main() {
-	fmt.Println(esc_sort([]int{2, 4, 6, 3}))
+	/*fmt.Println(esc_sort([]int{2, 4, 6, 3}))
 	fmt.Println(esc_sort([]int{1, 2, 3, 4, 5}))
 
 	fmt.Println(bubble_sort([]int{1, 3, 2, 4, 66, 76, 5}))
@@ -243,7 +246,7 @@ func main() {
 	fmt.Println(even_num(101))
 	fmt.Println(odd_num(101))
 	fmt.Println()
-	fmt.Println(requr_max([]int{}))
-	//fmt.Println(reverse_string("Privet"))
+	//fmt.Println(requr_max([]int{}))*/
+	//fmt.Println(reverse_string(""))
 	fmt.Println(reqursion_append([]int{1, 2, 3}, []int{5, 6, 7}))
 }
