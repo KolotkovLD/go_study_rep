@@ -197,11 +197,11 @@ func requr_max(arr []int) int {
 }
 
 func reverse_string(str string) string {
-	if len(str) == 0{
-	    return ""
-	//}
-	//if len(str) == 1 {
-	//	return string(str)
+	if len(str) == 0 {
+		return ""
+		//}
+		//if len(str) == 1 {
+		//	return string(str)
 	} else {
 		firstChar := str[0]
 		restOfChar := str[1:]
@@ -219,16 +219,60 @@ t
 
 func reqursion_append(arr1 []int, arr2 []int) []int {
 	if len(arr2) == 1 {
-		return append( arr1, arr2[0])
+		return append(arr1, arr2[0])
 	}
 	return reqursion_append(append(arr1, arr2[0]), arr2[1:])
 }
 
 /*
 1) рекурсивная функция, которая переворачивает строку
-2) рекурсивное исполнение функции которая соединяет массивы
+2) рекурсивное исполнение функции которая соединяет массивы   compare_sort
 3) --подготовка к "крестикам ноликам"
 */
+
+// рекурсивная функция по получению переворотов 2024_0_30
+//abc		acb	acb	cba	cab	abc	bca
+// bc 	cb	bc	\	acb	abc
+// ac	ca	ac	\	bca	bac
+// ab	ba	ab	\	cab	cba
+// acb abc bca bac cab cba
+//
+
+func req_per(str string) []string {
+	/*first_str := str[0]
+	  part1_str := str[1:]
+	  part2_str := str[0]+str[2:]
+	  part3_str := str[0:2] +str[3:]*/
+
+	fmt.Println(str)
+	if len(str) == 1 {
+		return []string{str}
+	}
+	rt_arr := []string{}
+	for i := 0; len(str) > i; i++ {
+		var new_item string
+		new_item = str[:i] + str[i+1:]
+		per_arr := req_per(new_item)
+		for j := 0; len(per_arr) > j; j++ {
+			rt_arr = append(rt_arr, string(str[i])+string(per_arr[j]))
+		}
+
+	}
+	return rt_arr
+}
+
+//https://www.mathsisfun.com/games/towerofhanoi.html
+//рекурсивная пирамида
+func piramid(start int, middle int, fin int, count int) {
+	if count == 0 {
+		fmt.Println("Конец")
+	} else {
+		piramid(start, fin, middle, count-1)
+		fmt.Println("Переносим большой на последнюю палку: со ", start, " на ", fin)
+		piramid(middle, start, fin, count-1)
+	}
+
+}
 
 func main() {
 	/*fmt.Println(esc_sort([]int{2, 4, 6, 3}))
@@ -248,5 +292,7 @@ func main() {
 	fmt.Println()
 	//fmt.Println(requr_max([]int{}))*/
 	//fmt.Println(reverse_string(""))
-	fmt.Println(reqursion_append([]int{1, 2, 3}, []int{5, 6, 7}))
+	//fmt.Println(reqursion_append([]int{1, 2, 3}, []int{5, 6, 7}))
+	//fmt.Println(req_per("abc"))
+	piramid(1, 2, 3, 3)
 }
