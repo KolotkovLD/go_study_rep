@@ -132,7 +132,23 @@ func merge_sort(arr []int) []int {
 	}
 	arr1 := merge_sort(arr[:len(arr)/2])
 	arr2 := merge_sort(arr[len(arr)/2:])
-	return compare_sort(arr1, arr2)
+	return req_compare_sort(arr1, arr2, []int{})
+}
+
+func req_compare_sort(arr1, arr2, arrRt []int) []int {
+	if len(arr1) == 0 {
+		return append(arrRt, arr2...)
+	}
+	if len(arr2) == 0 {
+		return append(arrRt, arr1...)
+	}
+
+	if arr1[0] > arr2[0] {
+		return req_compare_sort(arr1[1:], arr2, append(arrRt, arr1[0]))
+	} else if arr1[0] < arr2[0] {
+		return req_compare_sort(arr1, arr2[1:], append(arrRt, arr2[0]))
+	}
+	return arrRt
 }
 
 func compare_sort(arr1 []int, arr2 []int) []int {
@@ -261,8 +277,8 @@ func req_per(str string) []string {
 	return rt_arr
 }
 
-//https://www.mathsisfun.com/games/towerofhanoi.html
-//рекурсивная пирамида
+// https://www.mathsisfun.com/games/towerofhanoi.html
+// рекурсивная пирамида
 func piramid(start int, middle int, fin int, count int) {
 	if count == 0 {
 		fmt.Println("Конец")
@@ -294,5 +310,6 @@ func main() {
 	//fmt.Println(reverse_string(""))
 	//fmt.Println(reqursion_append([]int{1, 2, 3}, []int{5, 6, 7}))
 	//fmt.Println(req_per("abc"))
-	piramid(1, 2, 3, 3)
+	//piramid(1, 2, 3, 3)
+	fmt.Println(merge_sort([]int{88, 5, 2, 100, 7, 101, 44}))
 }
