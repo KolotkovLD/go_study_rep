@@ -2,10 +2,12 @@ package main
 
 import "fmt"
 
-//var tab = [3][3]string{{"x","o","x"},{"o","o","x"},{"_","_","_"}}
+var tab = [3][3]string{{"x","o","x"},{"o","o","x"},{"_","_","_"}}
+// x - computer || o - human
+// -1 - champion=human || 0 - nichaya || +1 - champion-computer
 
 // clean tsble
-var tab = [3][3]string{{"_", "_", "_"}, {"_", "_", "_"}, {"_", "_", "_"}}
+//var tab = [3][3]string{{"_", "_", "_"}, {"_", "_", "_"}, {"_", "_", "_"}}
 
 //var numeric_coord = [9][2]int{{0,0},{0,1},{0,2},{1,0},{1,1},{1,2},{2,0},{2,1},{2,2}}
 
@@ -48,28 +50,30 @@ func is_end_of_the_game(tab [3][3]string) bool {
 	return true
 }
 
-func is_champion(tab [3][3]string, gamer string) bool {
+func is_champion(tab [3][3]string) string {
+	
 	//horizont champion
 	for y := 0; y < 3; y++ {
-		if gamer == tab[y][0] && gamer == tab[y][1] && gamer == tab[y][2] {
-			return true
+		if tab[y][0] == tab[y][1] && tab[y][1] == tab[y][2] && tab[y][0] != "_" {
+			return tab[y][0]
 		}
 	}
 
 	// vertical champion
 	for x := 0; x < 3; x++ {
-		if gamer == tab[0][x] && gamer == tab[1][x] && gamer == tab[2][x] {
-			return true
+		if tab[0][x] == tab[1][x] && tab[1][x] == tab[2][x] && tab[0][x] != "_"{
+			return tab[0][x]
 		}
 	}
 
 	//diagonal champion
-	if (gamer == tab[0][0] && gamer == tab[1][1] && gamer == tab[2][2]) ||
-		(gamer == tab[0][2] && gamer == tab[1][1] && gamer == tab[2][0]) {
-		return true
+	if (tab[0][0] == tab[1][1] && tab[1][1] == tab[2][2] && tab[0][0] != "_") ||
+		(tab[0][2] == tab[1][1] && tab[1][1] == tab[2][0] && tab[1][1] != "_") {
+		return tab[1][1]
 	}
 
-	return false
+	// нет выйгрывших
+	return "_"
 }
 
 func printArrTab(arrTab [][3][3]string) {
@@ -93,17 +97,22 @@ func get_arr_tab(tab [3][3]string, gamer string) [][3][3]string {
 	return arrTab
 }
 
+
+// минимах алгоритм
+// функции высшего порядка
+ 
+
+
 // ДЗ
 //интерфейс чтобы играть с самим собой
 //пронумеровать клетки
 
 func change_gamer(gamer string) string {
 	if gamer == "o" {
-		gamer = "x"
+		return "x"
 	} else {
-		gamer = "o"
+		return "o"
 	}
-	return gamer
 }
 
 func count_variants(tab [3][3]string, gamer string) int {
@@ -114,23 +123,67 @@ func count_variants(tab [3][3]string, gamer string) int {
 		return 1
 	}
 
-	if is_champion(tab, gamer) {
+	champion := is_champion(tab)
+	if champion == "x" || champion == "o" {
 		return 1
 	}
 
-	new_gamer := change_gamer(gamer)
-	arr_of_tab := get_arr_tab(tab, new_gamer)
+	arr_of_tab := get_arr_tab(tab, gamer)
 	count_num := 0
 
-	if len(arr_of_tab) == 1 {
-		return 1
-	}
-
+	new_gamer := change_gamer(gamer)
 	for i := 0; i < len(arr_of_tab); i++ {
 		count_num += count_variants(arr_of_tab[i], new_gamer)
 	}
 	return count_num + 1
 }
+
+
+
+func get_max(arr []int8)int8{
+    max_val := arr[0]
+    for i:=1; i<len(arr); i++{
+	if arr[i] > max_val{
+	    max_val =  arr[i]
+	}
+	
+    }
+    return max_val
+}
+
+func get_min(arr []int8)int8{
+    min_val := arr[0]
+    for i:=0; i<len(arr); i++{
+	if arr[i] < min_val{
+	    min_val = arr[i]
+	}
+    }
+    return min_val
+}
+
+func check_table(tab [3][3]string, gamer string) int8{
+    champion := is_champion(tab)
+    if champion == "x"{
+	return 1
+    }else if champion == "o"{
+	return -1
+    }else if is_end_of_the_game(tab){
+	return 0
+    }
+    
+    arr_of_checks := []int8{}
+    tab_variants := get_arr_tab(tab)
+    for i:=0; i<len(tab_variants); i++{
+        arr_of_checks = append(arr_of_checks, check_table(tab_variants[i], gamer))
+    }
+
+    if gamer == "x"{
+	return get_max(arr_of_checks)
+    }else{
+	return get_min(arr_of_checks)
+    }
+}
+
 
 //func make_move(tab [3][3]string, x int, y int, gamer string) [3][3]string {
 //
@@ -151,7 +204,7 @@ func start_the_game(tab [3][3]string, gamer string) string {
 		fmt.Println("Ваш ход (строка):")
 		fmt.Scanf("%d\n", &y)
 		tab[y][x] = gamer
-		if is_champion(tab, gamer){
+		if is_champion(tab) != "_"{
 			champion_letter = "!!!!! Победили " + gamer + " !!!!!!"
 			break
 		}
@@ -173,5 +226,6 @@ func main() {
 	//arrTab := get_arr_tab(tab, "o")
 	//printArrTab(arrTab)
 	//fmt.Println(count_variants(tab, "o"))
-	fmt.Println(start_the_game(tab, "x"))
+	//fmt.Println(start_the_game(tab, "x"))
+	fmt.Println(check_table(tab, "x"))
 }
