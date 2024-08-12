@@ -2,7 +2,8 @@ package main
 
 import "fmt"
 
-var tab = [3][3]string{{"x","o","x"},{"o","o","x"},{"_","_","_"}}
+var tab = [3][3]string{{"x", "o", "x"}, {"o", "o", "x"}, {"_", "_", "_"}}
+
 // x - computer || o - human
 // -1 - champion=human || 0 - nichaya || +1 - champion-computer
 
@@ -29,7 +30,7 @@ oxx
 xoo
 */
 
-func print_tab(tab [3][3]string) {
+func printTab(tab [3][3]string) {
 	for y := 0; y < 3; y++ {
 		for x := 0; x < 3; x++ {
 			fmt.Printf(tab[y][x] + " | ")
@@ -38,7 +39,7 @@ func print_tab(tab [3][3]string) {
 	}
 }
 
-func is_end_of_the_game(tab [3][3]string) bool {
+func isEndOfTheGame(tab [3][3]string) bool {
 
 	for y := 0; y < 3; y++ {
 		for x := 0; x < 3; x++ {
@@ -50,8 +51,8 @@ func is_end_of_the_game(tab [3][3]string) bool {
 	return true
 }
 
-func is_champion(tab [3][3]string) string {
-	
+func isChampion(tab [3][3]string) string {
+
 	//horizont champion
 	for y := 0; y < 3; y++ {
 		if tab[y][0] == tab[y][1] && tab[y][1] == tab[y][2] && tab[y][0] != "_" {
@@ -61,7 +62,7 @@ func is_champion(tab [3][3]string) string {
 
 	// vertical champion
 	for x := 0; x < 3; x++ {
-		if tab[0][x] == tab[1][x] && tab[1][x] == tab[2][x] && tab[0][x] != "_"{
+		if tab[0][x] == tab[1][x] && tab[1][x] == tab[2][x] && tab[0][x] != "_" {
 			return tab[0][x]
 		}
 	}
@@ -78,12 +79,12 @@ func is_champion(tab [3][3]string) string {
 
 func printArrTab(arrTab [][3][3]string) {
 	for i := 0; i < len(arrTab); i++ {
-		print_tab(arrTab[i])
+		printTab(arrTab[i])
 		fmt.Println()
 	}
 }
 
-func get_arr_tab(tab [3][3]string, gamer string) [][3][3]string {
+func getArrTab(tab [3][3]string, gamer string) [][3][3]string {
 	var arrTab [][3][3]string
 	for y := 0; y < 3; y++ {
 		for x := 0; x < 3; x++ {
@@ -97,17 +98,14 @@ func get_arr_tab(tab [3][3]string, gamer string) [][3][3]string {
 	return arrTab
 }
 
-
 // минимах алгоритм
 // функции высшего порядка
- 
-
 
 // ДЗ
 //интерфейс чтобы играть с самим собой
 //пронумеровать клетки
 
-func change_gamer(gamer string) string {
+func changeGamer(gamer string) string {
 	if gamer == "o" {
 		return "x"
 	} else {
@@ -116,108 +114,104 @@ func change_gamer(gamer string) string {
 }
 
 func count_variants(tab [3][3]string, gamer string) int {
-	print_tab(tab)
+	printTab(tab)
 	fmt.Println()
 
-	if is_end_of_the_game(tab) {
+	if isEndOfTheGame(tab) {
 		return 1
 	}
 
-	champion := is_champion(tab)
+	champion := isChampion(tab)
 	if champion == "x" || champion == "o" {
 		return 1
 	}
 
-	arr_of_tab := get_arr_tab(tab, gamer)
-	count_num := 0
+	arrOfTab := getArrTab(tab, gamer)
+	countNum := 0
 
-	new_gamer := change_gamer(gamer)
-	for i := 0; i < len(arr_of_tab); i++ {
-		count_num += count_variants(arr_of_tab[i], new_gamer)
+	newGamer := changeGamer(gamer)
+	for i := 0; i < len(arrOfTab); i++ {
+		countNum += count_variants(arrOfTab[i], newGamer)
 	}
-	return count_num + 1
+	return countNum + 1
 }
 
+func getMax(arr []int8) int8 {
+	maxVal := arr[0]
+	for i := 1; i < len(arr); i++ {
+		if arr[i] > maxVal {
+			maxVal = arr[i]
+		}
 
-
-func get_max(arr []int8)int8{
-    max_val := arr[0]
-    for i:=1; i<len(arr); i++{
-	if arr[i] > max_val{
-	    max_val =  arr[i]
 	}
-	
-    }
-    return max_val
+	return maxVal
 }
 
-func get_min(arr []int8)int8{
-    min_val := arr[0]
-    for i:=0; i<len(arr); i++{
-	if arr[i] < min_val{
-	    min_val = arr[i]
+func getMin(arr []int8) int8 {
+	minVal := arr[0]
+	for i := 0; i < len(arr); i++ {
+		if arr[i] < minVal {
+			minVal = arr[i]
+		}
 	}
-    }
-    return min_val
+	return minVal
 }
 
-func check_table(tab [3][3]string, gamer string) int8{
-    champion := is_champion(tab)
-    if champion == "x"{
-	return 1
-    }else if champion == "o"{
-	return -1
-    }else if is_end_of_the_game(tab){
-	return 0
-    }
-    
-    arr_of_checks := []int8{}
-    tab_variants := get_arr_tab(tab)
-    for i:=0; i<len(tab_variants); i++{
-        arr_of_checks = append(arr_of_checks, check_table(tab_variants[i], gamer))
-    }
+func checkTable(tab [3][3]string, gamer string) int8 {
+	champion := isChampion(tab)
+	if champion == "x" {
+		return 1
+	} else if champion == "o" {
+		return -1
+	} else if isEndOfTheGame(tab) {
+		return 0
+	}
 
-    if gamer == "x"{
-	return get_max(arr_of_checks)
-    }else{
-	return get_min(arr_of_checks)
-    }
+	arrOfChecks := []int8{}
+	tabVariants := getArrTab(tab)
+	for i := 0; i < len(tabVariants); i++ {
+		arrOfChecks = append(arrOfChecks, checkTable(tabVariants[i], gamer))
+	}
+
+	if gamer == "x" {
+		return getMax(arrOfChecks)
+	} else {
+		return getMin(arrOfChecks)
+	}
 }
-
 
 //func make_move(tab [3][3]string, x int, y int, gamer string) [3][3]string {
 //
 //	return tab
-//}
-
+//}u
 
 func start_the_game(tab [3][3]string, gamer string) string {
 	fmt.Println("*** Игра началась ***")
-	champion_letter := ""
+	championLetter := ""
 
-	for i := 1; i<=9; i++ {
+	for i := 1; i <= 9; i++ {
 		var x, y int
 		fmt.Println("--- Ход № ", i, " Игрок: ", gamer)
-		print_tab(tab)
+		printTab(tab)
 		fmt.Println("Ваш ход (столбец):")
 		fmt.Scanf("%d\n", &x)
 		fmt.Println("Ваш ход (строка):")
 		fmt.Scanf("%d\n", &y)
 		tab[y][x] = gamer
-		if is_champion(tab) != "_"{
-			champion_letter = "!!!!! Победили " + gamer + " !!!!!!"
+		if isChampion(tab) != "_" {
+			championLetter = "!!!!! Победили " + gamer + " !!!!!!"
 			break
 		}
-		if is_end_of_the_game(tab) {
-			champion_letter = "!!!!! Ничья !!!!!"
+		if isEndOfTheGame(tab) {
+			championLetter = "!!!!! Ничья !!!!!"
 			break
 		}
 
-		gamer = change_gamer(gamer)
+		gamer = changeGamer(gamer)
 		fmt.Println("=================================")
 		fmt.Println()
 	}
-	return champion_letter
+	return championLetter
 }
 
 func main() {
@@ -227,5 +221,5 @@ func main() {
 	//printArrTab(arrTab)
 	//fmt.Println(count_variants(tab, "o"))
 	//fmt.Println(start_the_game(tab, "x"))
-	fmt.Println(check_table(tab, "x"))
+	fmt.Println(checkTable(tab, "x"))
 }
