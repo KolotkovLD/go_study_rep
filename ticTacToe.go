@@ -101,10 +101,6 @@ func getArrTab(tab [3][3]string, gamer string) [][3][3]string {
 // минимах алгоритм
 // функции высшего порядка
 
-// ДЗ
-//интерфейс чтобы играть с самим собой
-//пронумеровать клетки
-
 func changeGamer(gamer string) string {
 	if gamer == "o" {
 		return "x"
@@ -113,7 +109,7 @@ func changeGamer(gamer string) string {
 	}
 }
 
-func count_variants(tab [3][3]string, gamer string) int {
+func countVariants(tab [3][3]string, gamer string) int {
 	printTab(tab)
 	fmt.Println()
 
@@ -131,7 +127,7 @@ func count_variants(tab [3][3]string, gamer string) int {
 
 	newGamer := changeGamer(gamer)
 	for i := 0; i < len(arrOfTab); i++ {
-		countNum += count_variants(arrOfTab[i], newGamer)
+		countNum += countVariants(arrOfTab[i], newGamer)
 	}
 	return countNum + 1
 }
@@ -168,7 +164,7 @@ func checkTable(tab [3][3]string, gamer string) int8 {
 	}
 
 	arrOfChecks := []int8{}
-	tabVariants := getArrTab(tab)
+	tabVariants := getArrTab(tab, gamer)
 	for i := 0; i < len(tabVariants); i++ {
 		arrOfChecks = append(arrOfChecks, checkTable(tabVariants[i], gamer))
 	}
@@ -178,6 +174,34 @@ func checkTable(tab [3][3]string, gamer string) int8 {
 	} else {
 		return getMin(arrOfChecks)
 	}
+}
+
+func gameScore(tab [3][3]string, gamer string) int8 {
+	champion := isChampion(tab, gamer)
+	if champion == "x" {
+		return 1
+	} else if champion == "o" {
+		return -1
+	} else if isEndOfTheGame(tab) {
+		return 0
+	}
+}
+
+func gameOver(tab [3][3]string) bool {
+	if isEndOfTheGame(tab) || isChampion(tab) != "_" {
+		return true
+	}
+	return false
+}
+
+func minimax(tab [3][3]string) int8 {
+	if gameOver(tab) {
+		return gameScore(tab)
+	}
+
+	scores := []int8{}
+	moves := []int8{}
+
 }
 
 //func make_move(tab [3][3]string, x int, y int, gamer string) [3][3]string {
@@ -219,7 +243,7 @@ func main() {
 	//fmt.Println(is_end_of_the_game(tab))
 	//arrTab := get_arr_tab(tab, "o")
 	//printArrTab(arrTab)
-	//fmt.Println(count_variants(tab, "o"))
+	fmt.Println(countVariants(tab, "o"))
 	//fmt.Println(start_the_game(tab, "x"))
-	fmt.Println(checkTable(tab, "x"))
+	//fmt.Println(checkTable(tab, "x"))
 }
