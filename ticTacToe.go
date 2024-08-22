@@ -2,13 +2,13 @@ package main
 
 import "fmt"
 
-var tab = [3][3]string{{"x", "o", "x"}, {"o", "o", "x"}, {"_", "_", "_"}}
+//var tab = [3][3]string{{"x", "o", "x"}, {"o", "o", "x"}, {"_", "_", "_"}}
 
 // x - computer || o - human
-// -1 - champion=human || 0 - nichaya || +1 - champion-computer
+// -1 - champion=human || 0 - nobody || +1 - champion-computer
 
-// clean tsble
-//var tab = [3][3]string{{"_", "_", "_"}, {"_", "_", "_"}, {"_", "_", "_"}}
+// clean table
+var tab = [3][3]string{{"_", "_", "_"}, {"_", "_", "_"}, {"_", "_", "_"}}
 
 //var numeric_coord = [9][2]int{{0,0},{0,1},{0,2},{1,0},{1,1},{1,2},{2,0},{2,1},{2,2}}
 
@@ -153,6 +153,25 @@ func getMin(arr []int8) int8 {
 	return minVal
 }
 
+func indexOfMax(arr []int8) int {
+	maxIndex := 0
+	for i := 1; i < len(arr); i++ {
+		if arr[maxIndex] < arr[i] {
+			maxIndex = i
+		}
+	}
+	return maxIndex
+}
+
+func tabWithMaxScore(tab [3][3]string) [3][3]string {
+	tabVariants := getArrTab(tab, "x")
+	arrScore := []int8{}
+	for i := 0; i < len(tabVariants); i++ {
+		arrScore = append(arrScore, checkTable(tabVariants[i], "o"))
+	}
+	return tabVariants[indexOfMax(arrScore)]
+}
+
 func checkTable(tab [3][3]string, gamer string) int8 {
 	champion := isChampion(tab)
 	if champion == "x" {
@@ -165,8 +184,9 @@ func checkTable(tab [3][3]string, gamer string) int8 {
 
 	arrOfChecks := []int8{}
 	tabVariants := getArrTab(tab, gamer)
+	newGamer := changeGamer(gamer)
 	for i := 0; i < len(tabVariants); i++ {
-		arrOfChecks = append(arrOfChecks, checkTable(tabVariants[i], gamer))
+		arrOfChecks = append(arrOfChecks, checkTable(tabVariants[i], newGamer))
 	}
 
 	if gamer == "x" {
@@ -176,16 +196,17 @@ func checkTable(tab [3][3]string, gamer string) int8 {
 	}
 }
 
-func gameScore(tab [3][3]string, gamer string) int8 {
-	champion := isChampion(tab, gamer)
-	if champion == "x" {
-		return 1
-	} else if champion == "o" {
-		return -1
-	} else if isEndOfTheGame(tab) {
-		return 0
-	}
-}
+//func gameScore(tab [3][3]string, gamer string) int8 {
+//	champion := isChampion(tab)
+//	if champion == "x" {
+//		return 1
+//	} else if champion == "o" {
+//		return -1
+//	} else if isEndOfTheGame(tab) {
+//		return 0
+//	}
+//	return 0
+//}
 
 func gameOver(tab [3][3]string) bool {
 	if isEndOfTheGame(tab) || isChampion(tab) != "_" {
@@ -194,15 +215,15 @@ func gameOver(tab [3][3]string) bool {
 	return false
 }
 
-func minimax(tab [3][3]string) int8 {
-	if gameOver(tab) {
-		return gameScore(tab)
-	}
-
-	scores := []int8{}
-	moves := []int8{}
-
-}
+//func minimax(tab [3][3]string) int8 {
+//	if gameOver(tab) {
+//		return gameScore(tab)
+//	}
+//
+//	scores := []int8{}
+//	moves := []int8{}
+//
+//}
 
 //func make_move(tab [3][3]string, x int, y int, gamer string) [3][3]string {
 //
@@ -212,16 +233,28 @@ func minimax(tab [3][3]string) int8 {
 func start_the_game(tab [3][3]string, gamer string) string {
 	fmt.Println("*** Игра началась ***")
 	championLetter := ""
-
+	printTab(tab)
 	for i := 1; i <= 9; i++ {
 		var x, y int
 		fmt.Println("--- Ход № ", i, " Игрок: ", gamer)
-		printTab(tab)
-		fmt.Println("Ваш ход (столбец):")
-		fmt.Scanf("%d\n", &x)
-		fmt.Println("Ваш ход (строка):")
-		fmt.Scanf("%d\n", &y)
-		tab[y][x] = gamer
+		if gamer == "x" {
+			tab = tabWithMaxScore(tab)
+			printTab(tab)
+		} else {
+
+			//printTab(tab)
+			fmt.Println("Ваш ход (столбец):")
+			fmt.Scanf("%d\n", &x)
+			fmt.Println("Ваш ход (строка):")
+			fmt.Scanf("%d\n", &y)
+			newPoint := tab[y-1][x-1]
+			if newPoint != "_" {
+				fmt.Println("Недопустимый шаг - 3позиция занята")
+				i--
+				continue
+			}
+			tab[y-1][x-1] = gamer
+		}
 		if isChampion(tab) != "_" {
 			championLetter = "!!!!! Победили " + gamer + " !!!!!!"
 			break
@@ -235,6 +268,9 @@ func start_the_game(tab [3][3]string, gamer string) string {
 		fmt.Println("=================================")
 		fmt.Println()
 	}
+	fmt.Println("===============================")
+	fmt.Println()
+	printTab(tab)
 	return championLetter
 }
 
@@ -243,7 +279,8 @@ func main() {
 	//fmt.Println(is_end_of_the_game(tab))
 	//arrTab := get_arr_tab(tab, "o")
 	//printArrTab(arrTab)
-	fmt.Println(countVariants(tab, "o"))
-	//fmt.Println(start_the_game(tab, "x"))
+	//fmt.Println(countVariants(tab, "o"))
+	fmt.Println(start_the_game(tab, "o"))
 	//fmt.Println(checkTable(tab, "x"))
+	//printTab(tabWithMaxScore(tab))
 }
